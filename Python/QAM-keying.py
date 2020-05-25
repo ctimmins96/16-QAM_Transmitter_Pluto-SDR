@@ -18,6 +18,25 @@ import numpy as np
 import sys
 import traceback
 
+### Constant Definitions
+KEY_16QAM = { 	'0' : (1 + 1j),
+				'1' : (1 - 1j),
+				'2' : (-1 - 1j),
+				'3' : (-1 + 1j),
+				'4' : (1 + 2j),
+				'5' : (2 + 2j),
+				'6' : (2 + 1j),
+				'7' : (2 - 1j),
+				'8' : (2 - 2j),
+				'9' : (1 - 2j),
+				'A' : (-1 - 2j),
+				'B' : (-2 - 2j),
+				'C' : (-2 - 1j),
+				'D' : (-2 + 1j),
+				'E' : (-2 + 2j),
+				'F' : (-1 + 2j)
+}
+
 ### Function Definitions
 
 ########################################################################
@@ -32,6 +51,7 @@ import traceback
 # tx_bits
 # - Type: integer array
 # - Description: integer array of bits to be converted to sine wave. Must be multiples of 4 bits (16-QAM)
+# - Note: MSB is at index 0, LSB is at the last index
 # fc
 # - Type: double
 # - Description: Carrier frequency of sinusoid
@@ -40,13 +60,20 @@ import traceback
 # - Description: Sampling Freqency for Pluto SDR
 #
 # Dependencies:
-# - key_16qam
+# - KEY_16QAM
 ########################################################################
 def bits2sine(tx_bits,fc,fs):
-	if (len(tx_bits) % 4 ~= 0):
+	if (len(tx_bits) % 2 ~= 0):
+		# Group bits into groups of 8 (bytes); each index is a nibble
 		raise InvalidBitsError
+		return 0
+	else:
+		# Create initial variables
+		
 
-	# Group bits into groups of 4 (nibbles)
+		# Loop through tx_bits variable and generate sinusoid
+		for bit in tx_bits:
+
 
 ### Class Definitions
 
