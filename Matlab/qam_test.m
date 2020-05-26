@@ -1,10 +1,11 @@
 %% MATLAB simulation for 16-QAM system
+close all;
 
 % Define some initial variables
+N = 24;
 fs = 1e9;
-fc = fs/100;
-N = 100;
-tx_bits = ['0','1','7','F'];
+fc = fs/N;
+tx_bits = ['0','1','7','F','9','4','B','D','3'];
 
 % Generate and Plot Transmit Data (also generate noise)
 tx = bits2sin(tx_bits,fc,fs);
@@ -16,43 +17,32 @@ tx = tx_s + tx_noise;
 
 n = (1:length(tx))/fs;
 
-plot(n,tx_s,'*',n,tx,'*');
+plot(n,tx_s,n,tx);
 xlabel('Sample');
 ylabel('Voltage');
 legend('Transmitted','Received');
 
-% Create initial waveform variables (delete definitions later)
-n = 1:N;
-p_pi6 = sin(2*pi*fc*n/fs + pi/6);
-p_pi4 = sin(2*pi*fc*n/fs + pi/4);
-p_pi3 = sin(2*pi*fc*n/fs + pi/3);
-p_5pi6 = sin(2*pi*fc*n/fs + 5*pi/6);
-p_3pi4 = sin(2*pi*fc*n/fs + 3*pi/4);
-p_2pi3 = sin(2*pi*fc*n/fs + 2*pi/3);
-p_npi6 = sin(2*pi*fc*n/fs - pi/6);
-p_npi4 = sin(2*pi*fc*n/fs - pi/4);
-p_npi3 = sin(2*pi*fc*n/fs - pi/3);
-p_n5pi6 = sin(2*pi*fc*n/fs - 5*pi/6);
-p_n3pi4 = sin(2*pi*fc*n/fs - 3*pi/4);
-p_n2pi3 = sin(2*pi*fc*n/fs - 2*pi/3);
-
-phases = [p_pi6; p_pi4; p_pi3; p_5pi6; p_3pi4; p_2pi3; p_npi6; p_npi4; p_npi3; p_n5pi6; p_n3pi4; p_n2pi3; ];
-
 % Create found_bits variable to store results in
-found_bits = ['','','',''];
+found_bits = [''];
 
 % Loop through tx variable, partition bits, decode partitions
 for k = 1:length(tx)/N
     part = tx(N*(k - 1) + 1 : N*k);
 
+    % TODO: Possibly FIR Filter partitions
+
     f_amp = max(part);
     f_pha = 0;
     max_cor = 0;
-    for l = 1:length(phases(:,1))
-        tmp = norm_xcor(part,phases(l,:));
+    % TODO: Change structure of nearest neighbor approximation in
+    % incorporate a custom delay
+    for l = 1:N
+        a = 1:N;
+        tst_wav = sin(2*pi*(fc/fs)*(a + (l-1)));
+        tmp = norm_xcor(part,tst_wav);
         if (tmp > max_cor)
             max_cor = tmp;
-            f_pha = phase_LUT(l);
+            f_pha = 2*pi*(l-1)/N;
         end
     end
 
@@ -152,41 +142,6 @@ end
 
 end
 
-% phase_LUT
-function pha = phase_LUT(x)
-
-pha = 0;
-
-switch(x)
-    case 1
-        pha = pi/6;
-    case 2
-        pha = pi/4;
-    case 3
-        pha = pi/3;
-    case 4
-        pha = 5*pi/6;
-    case 5
-        pha = 3*pi/4;
-    case 6
-        pha = 2*pi/3;
-    case 7
-        pha = -pi/6;
-    case 8
-        pha = -pi/4;
-    case 9
-        pha = -pi/3;
-    case 10
-        pha = -5*pi/6;
-    case 11
-        pha = -3*pi/4;
-    case 12
-        pha = -2*pi/3;
-
-end
-
-end
-
 % near_neighbor
 function bit = near_neighbor(x)
 
@@ -195,7 +150,7 @@ bits = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'];
 
 dist = 100;
 for k = 1:length(bits)
-    if (abs(x - KEY_16QAM(bits(k))) < dist)
+    if (abs(x - KEY_16QAM(bits(k))) <= dist)
         dist = abs(x - KEY_16QAM(bits(k)));
         bit = bits(k);
     end
