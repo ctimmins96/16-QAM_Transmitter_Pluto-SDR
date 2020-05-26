@@ -45,11 +45,13 @@ KEY_16QAM = { 	'0' : (1 + 1j),
 # Method: bits2sine
 #
 # Description:
+# ------------
 # Create QAM-keyed sine wave from bit sequence
 #
 # Parameters:
+# -----------
 # tx_bits
-# - Type: integer array
+# - Type: int[]
 # - Description: integer array of bits to be converted to sine wave. Must be multiples of 4 bits (16-QAM)
 # - Note: MSB is at index 0, LSB is at the last index
 # fc
@@ -58,6 +60,12 @@ KEY_16QAM = { 	'0' : (1 + 1j),
 # fs
 # - Type: double
 # - Description: Sampling Freqency for Pluto SDR
+#
+# Return:
+# -------
+# tx
+# - Type: double[]
+# - Description: Sinusoid of generated QAM bits
 #
 # Dependencies:
 # - KEY_16QAM
@@ -69,10 +77,23 @@ def bits2sine(tx_bits,fc,fs):
 		return 0
 	else:
 		# Create initial variables
-		
+		N = round(fs/fc)
+		tx = range(N*len(tx_bits))
 
 		# Loop through tx_bits variable and generate sinusoid
-		for bit in tx_bits:
+		for i in range(len(tx_bits)):
+			# Get complex variable from specified bit
+			cplx_bit = KEY_16QAM[tx_bits[i]]
+
+			# Convert complex variable to sinusoid
+			amp = abs(cplx_bit)
+			pha = np.arctan2(cplx_bit.imag,cplx_bit.real)
+
+			# Use for loop to generate sinusoid
+			for k in range(N):
+				tx[k + N*i] = amp*np.sin(2*np.pi*fc*k/fs + pha)
+
+		return tx
 
 
 ### Class Definitions
@@ -83,9 +104,11 @@ def bits2sine(tx_bits,fc,fs):
 # Class Name: InvalidBitsError
 #
 # Description:
+# ------------
 # Exception to be raised when an invalid number of bits is converted
 #
 # Parameters:
+# -----------
 # message
 # - Type: String
 # - Description: message to be printed to the console when the error is raised
