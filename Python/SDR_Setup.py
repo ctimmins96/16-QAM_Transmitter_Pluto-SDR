@@ -38,7 +38,7 @@ sdr
 
 def pluto_setup(tx = True,fc_tx=1e9,cyclic = False,rx=True,fc_rx=1e9):
 	# Create device interface
-	sdr = adi.Pluto()
+	sdr = adi.Pluto('ip:192.168.2.1')
 
 	# Configure properties
 	# Check to see if tx or rx are asserted

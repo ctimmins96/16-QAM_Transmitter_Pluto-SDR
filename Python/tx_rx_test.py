@@ -5,4 +5,6 @@ from SDR_Setup import *
 
 if __name__ == '__main__':
 	sdr = pluto_setup(True, 1e8,True,True,1e8)
-	
+
+	fs = sdr.sample_rate
+	fc = fs / 100
