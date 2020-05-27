@@ -36,7 +36,7 @@ sdr
  -Description: Symbolic object for the ADALM-Pluto sdr
 """
 
-def pluto_setup(tx = True,fc_tx=1e9,rx=True,fc_rx=1e9):
+def pluto_setup(tx = True,fc_tx=1e9,cyclic = False,rx=True,fc_rx=1e9):
 	# Create device interface
 	sdr = adi.Pluto()
 
@@ -45,7 +45,7 @@ def pluto_setup(tx = True,fc_tx=1e9,rx=True,fc_rx=1e9):
 	if (tx):
 		# Configure Tx property
 		sdr.tx_lo = fc_tx
-		sdr.tx_cyclic_buffer = False
+		sdr.tx_cyclic_buffer = cyclic
 		sdr.tx_hardwaregain_chan0 = 0
 
 	if (rx):
