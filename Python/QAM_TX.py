@@ -54,7 +54,7 @@ from QAM_CONST import *
 # Dependencies:
 # - KEY_16QAM
 ########################################################################
-def bits2sine(tx_bits,fc,fs):
+def bits2sine(tx_bits,fc,fs,complex_out = True):
 	if (len(tx_bits) % 2 ~= 0):
 		# Group bits into groups of 8 (bytes); each index is a nibble
 		raise InvalidBitsError
@@ -65,17 +65,30 @@ def bits2sine(tx_bits,fc,fs):
 		tx = range(N*len(tx_bits))
 
 		# Loop through tx_bits variable and generate sinusoid
-		for i in range(len(tx_bits)):
-			# Get complex variable from specified bit
-			cplx_bit = KEY_16QAM[tx_bits[i]]
+		if (complex_out):
+			for i in range(len(tx_bits)):
+				# Get complex variable from specified bit
+				cplx_bit = KEY_16QAM[tx_bits[i]]
 
-			# Convert complex variable to sinusoid
-			amp = abs(cplx_bit)
-			pha = np.arctan2(cplx_bit.imag,cplx_bit.real)
+				# Convert complex variable to sinusoid
+				amp = abs(cplx_bit)
+				pha = np.arctan2(cplx_bit.imag,cplx_bit.real)
 
-			# Use for loop to generate sinusoid
-			for k in range(N):
-				tx[k + N*i] = amp*np.sin(2*np.pi*fc*k/fs + pha)
+				# Use for loop to generate sinusoid
+				for k in range(N):
+					tx[k + N*i] = amp*(np.sin(2*np.pi*fc*k/fs + pha) + 1j*np.cos(2*np.pi*fc*k/fs + pha))
+		else:
+			for i in range(len(tx_bits)):
+				# Get complex variable from specified bit
+				cplx_bit = KEY_16QAM[tx_bits[i]]
+
+				# Convert complex variable to sinusoid
+				amp = abs(cplx_bit)
+				pha = np.arctan2(cplx_bit.imag,cplx_bit.real)
+
+				# Use for loop to generate sinusoid
+				for k in range(N):
+					tx[k + N*i] = amp*np.sin(2*np.pi*fc*k/fs + pha)
 
 		return tx
 

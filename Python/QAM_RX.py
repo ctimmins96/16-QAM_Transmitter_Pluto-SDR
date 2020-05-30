@@ -51,7 +51,7 @@ def near_neighbor(part):
 			dist = abs(f_z - KEY_16QAM[bits[k]])
 			bit = bits[k]
 
-	return bit 
+	return bit
 
 ########################################################################
 # Normalized Cross Correlation Function
@@ -71,6 +71,11 @@ def near_neighbor(part):
 # - Type: double[]
 # - Description: Second xcorr variable
 #
+# Returns:
+# --------
+# xcorr_val
+# - Type: double
+# - Description: maximum correlation value
 ########################################################################
 
 def norm_xcorr(x1,x2):
@@ -97,5 +102,56 @@ def norm_xcorr(x1,x2):
 
 		if (xsum > xcorr_val):
 			xcorr_val = xsum
+
+	return xcorr_val
+
+########################################################################
+# Normalized Cross Correlation Function 2
+#
+# Method: norm_xcorr2
+#
+# Description:
+# ------------
+# Computes the normalized cross-correlation between two double arrays
+#
+# Parameters:
+# -----------
+# x1
+# - Type: double[]
+# - Description: First xcorr variable
+# x2
+# - Type: double[]
+# - Description: Second xcorr variable
+#
+# Returns:
+# --------
+# xcorr_val
+# - Type: int
+# - Description: index of maximum correlation
+########################################################################
+
+def norm_xcorr2(x1,x2):
+	# Compute the energy of x1 and x2
+	e1 = 0
+	for i in range(len(x1)):
+		e1 += x1(i)**2
+
+	e2 = 0
+	for i in range(len(x2)):
+		e2 += x2(i)**2
+
+	# Create Temporary xcorr value
+	xcorr_val = 0;
+	xcorr_sum = 0;
+
+	for i in range(len(x2) - len(x1) + 1):
+		tmp = x2[i:(i + len(x1))]
+		xsum = 0
+		for j in range(len(tmp)):
+			xsum += tmp(j)*x1(j)/((e1*e2)**0.5)
+
+		if (xsum > xcorr_sum):
+			xcorr_sum = xsum
+			xcorr_val = i
 
 	return xcorr_val
