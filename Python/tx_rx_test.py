@@ -1,6 +1,7 @@
 from QAM_TX import *
 from QAM_RX import *
 from SDR_Setup import *
+from file_write import *
 
 
 if __name__ == '__main__':
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 		# Receive sinewave
 		tmp = sdr.rx()
 
-		rx_buf1[k] = tmp 
+		rx_buf1[k] = tmp
 		# TODO: FIR Filter input for noise
 
 		# Extract Message by cross correlating with KEY_START_BITS
@@ -60,3 +61,5 @@ if __name__ == '__main__':
 		print('Received bits: ' + rx_bits)
 
 		k += 1
+
+	log_file_write(rx_buf1,rx_buf2)
