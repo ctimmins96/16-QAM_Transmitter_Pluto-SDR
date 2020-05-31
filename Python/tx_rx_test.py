@@ -40,7 +40,7 @@ if __name__ == '__main__':
 		# Receive sinewave
 		tmp = sdr.rx()
 
-		rx_buf1[k] = tmp 
+		rx_buf1[k] = tmp
 		# TODO: FIR Filter input for noise
 
 		# Extract Message by cross correlating with KEY_START_BITS
@@ -59,4 +59,10 @@ if __name__ == '__main__':
 		print('Transmitted bits: ' + tx_bits)
 		print('Received bits: ' + rx_bits)
 
+		# Store received data into rx_buf2
+		rx_buf2[k] = rx_bits
+
 		k += 1
+
+	# Write Data to log file
+	# Write to a textual log file and csv log file
