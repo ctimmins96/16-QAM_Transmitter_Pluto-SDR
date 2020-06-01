@@ -55,14 +55,14 @@ from QAM_CONST import *
 # - KEY_16QAM
 ########################################################################
 def bits2sine(tx_bits,fc,fs,complex_out = True):
-	if (len(tx_bits) % 2 ~= 0):
+	if (len(tx_bits) % 2 != 0):
 		# Group bits into groups of 8 (bytes); each index is a nibble
 		raise InvalidBitsError
 		return 0
 	else:
 		# Create initial variables
 		N = round(fs/fc)
-		tx = range(N*len(tx_bits))
+		tx = [0]*N*len(tx_bits)
 
 		# Loop through tx_bits variable and generate sinusoid
 		if (complex_out):
@@ -76,7 +76,7 @@ def bits2sine(tx_bits,fc,fs,complex_out = True):
 
 				# Use for loop to generate sinusoid
 				for k in range(N):
-					tx[k + N*i] = amp*(np.sin(2*np.pi*fc*k/fs + pha) + 1j*np.cos(2*np.pi*fc*k/fs + pha))
+					tx[k + N*i] = (2**14)*amp*(np.sin(2*np.pi*fc*k/fs + pha) + 1j*np.cos(2*np.pi*fc*k/fs + pha))
 		else:
 			for i in range(len(tx_bits)):
 				# Get complex variable from specified bit

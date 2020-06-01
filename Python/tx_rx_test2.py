@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
 	# Transmit sinewave
 	sdr.tx(tx)
-        
+
 	while(k < M):
 
 		# Receive sinewave
@@ -56,27 +56,6 @@ if __name__ == '__main__':
 		rx_buf1[k] = tmp
 		# TODO: FIR Filter input for noise
 
-		# Extract Message by cross correlating with KEY_START_BITS
-		start_idx = norm_xcorr2(xcorr_start,tmp)
-		end_idx = norm_xcorr2(xcorr_end,tmp[start_idx:])
-
-		tmp2 = tmp[start_idx:(start_idx + end_idx + N - 1)]
-
-		# Partition tmp2 and convert into bits
-		rx_bits = ['']*len(tx_bits)
-
-		for j in range(len(tx_bits)):
-			part = tmp2[(j*N):(j+1)*N - 1]
-			rx_bits[j] = near_neighbor(part)
-
-
-		print('Transmitted bits: ' + arr2str(tx_bits))
-		print('Received bits: ' + arr2str(rx_bits))
-
-		# Store received data into rx_buf2
-		rx_buf2[k] = rx_bits
-
 		k += 1
 
 	log_file_write(rx_buf1,rx_buf2)
-

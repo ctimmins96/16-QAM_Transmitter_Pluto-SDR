@@ -44,13 +44,13 @@ def pluto_setup(tx = True,fc_tx=1e9,cyclic = False,rx=True,fc_rx=1e9):
 	# Check to see if tx or rx are asserted
 	if (tx):
 		# Configure Tx property
-		sdr.tx_lo = fc_tx
+		sdr.tx_lo = int(fc_tx)
 		sdr.tx_cyclic_buffer = cyclic
 		sdr.tx_hardwaregain_chan0 = 0
 
 	if (rx):
 		# Configure Rx properties
-		sdr.rx_lo = fc_rx
-		sdr.rx_rf_bandwidth = 1e6
+		sdr.rx_lo = int(fc_rx)
+		sdr.rx_rf_bandwidth = int(1e6)
 
 	return sdr

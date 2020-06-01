@@ -37,7 +37,7 @@ def near_neighbor(part):
 
 	for i in range(N):
 		for j in range(N):
-			tst_wav(j) = np.sin(2*np.pi*(j + i)/N)
+			tst_wav[j] = np.sin(2*np.pi*(j + i)/N)
 
 		tmp = norm_xcorr(part,tst_wav)
 		if (tmp > max_corr):
@@ -82,11 +82,11 @@ def norm_xcorr(x1,x2):
 	# Compute the energy of x1 and x2
 	e1 = 0
 	for i in range(len(x1)):
-		e1 += x1(i)**2
+		e1 += abs(x1[i])**2
 
 	e2 = 0
 	for i in range(len(x2)):
-		e2 += x2(i)**2
+		e2 += abs(x2[i])**2
 
 	# Create Temporary xcorr value
 	xcorr_val = 0;
@@ -98,7 +98,7 @@ def norm_xcorr(x1,x2):
 		tmp = x2_p[i:(i + len(x1))]
 		xsum = 0
 		for j in range(len(tmp)):
-			xsum += tmp(j)*x1(j)/((e1*e2)**0.5)
+			xsum += tmp[j]*x1[j]/((e1*e2)**0.5)
 
 		if (xsum > xcorr_val):
 			xcorr_val = xsum
@@ -134,11 +134,11 @@ def norm_xcorr2(x1,x2):
 	# Compute the energy of x1 and x2
 	e1 = 0
 	for i in range(len(x1)):
-		e1 += x1(i)**2
+		e1 += x1[i]**2
 
 	e2 = 0
 	for i in range(len(x2)):
-		e2 += x2(i)**2
+		e2 += x2[i]**2
 
 	# Create Temporary xcorr value
 	xcorr_val = 0;
@@ -148,7 +148,7 @@ def norm_xcorr2(x1,x2):
 		tmp = x2[i:(i + len(x1))]
 		xsum = 0
 		for j in range(len(tmp)):
-			xsum += tmp(j)*x1(j)/((e1*e2)**0.5)
+			xsum += tmp[j]*x1[j]/((e1*e2)**0.5)
 
 		if (xsum > xcorr_sum):
 			xcorr_sum = xsum
