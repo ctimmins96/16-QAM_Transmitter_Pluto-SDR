@@ -47,10 +47,11 @@ def pluto_setup(tx = True,fc_tx=1e9,cyclic = False,rx=True,fc_rx=1e9):
 		sdr.tx_lo = int(fc_tx)
 		sdr.tx_cyclic_buffer = cyclic
 		sdr.tx_hardwaregain_chan0 = 0
+		sdr.tx_rf_bandwidth = int(sdr.sample_rate)
 
 	if (rx):
 		# Configure Rx properties
 		sdr.rx_lo = int(fc_rx)
-		sdr.rx_rf_bandwidth = int(1e6)
+		sdr.rx_rf_bandwidth = int(sdr.sample_rate)
 
 	return sdr

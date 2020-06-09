@@ -2,6 +2,7 @@ from QAM_TX import *
 from QAM_RX import *
 from SDR_Setup import *
 from file_write import *
+import numpy as np
 
 # Array to String
 def arr2str(arr):
@@ -35,14 +36,17 @@ if __name__ == '__main__':
 	# Create Sinewave from bits
 	tx = bits2sine(tx_bits,fc,fs)
 
+	# Pad Either Side with zeros
+	tx = [0]*int(0.5*len(tx)) + tx + [0]*int(0.5*len(tx))
+
 	# Attempt to receive data
-	M = 4 								# Number of trials
+	M = 1 								# Number of trials
 	rx_buf1 = [[0]*len(tx)]*M			# Raw Data buffer
 	rx_buf2 = [['']*N*len(tx_bits)]*M 	# Encoded Data buffer
 	k = 0;
 
 	# Make sure rx buffer is large enough to receive data
-	sdr.rx_buffer_size = N*(len(tx_bits))*2
+	sdr.rx_buffer_size = N*(len(tx_bits))*4
 
 	# Transmit sinewave
 	sdr.tx(tx)
@@ -50,7 +54,7 @@ if __name__ == '__main__':
 	while(k < M):
 
 		# Receive sinewave
-		tmp = abs(sdr.rx())
+		tmp = (sdr.rx())
 		#tmp *= 2*(2**0.5)/max(tmp)
 
 		rx_buf1[k] = tmp
@@ -58,4 +62,7 @@ if __name__ == '__main__':
 
 		k += 1
 
-	log_file_write(rx_buf1,rx_buf2)
+	mat_file_write(rx_buf1,"C:\\Users\\chase\\Desktop\\")
+
+	# Release SDR
+	sdr.release()

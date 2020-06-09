@@ -43,3 +43,16 @@ def log_file_write(real_time,encoded):
 
 	f_text.close()
 	f_csv.close()
+
+def mat_file_write(rx,fpath):
+	# Open Matlab log file
+	f_mat = open(fpath + "rx_data.csv","w")
+
+	for i in range(len(rx)):
+		for j in range(len(rx[i])):
+			f_mat.write(str(rx[i][j]))
+			if (j != len(rx) - 1):
+				f_mat.write(',')
+
+		f_mat.write('\n')
+	f_mat.close()

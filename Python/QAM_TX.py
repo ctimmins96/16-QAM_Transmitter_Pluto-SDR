@@ -70,13 +70,9 @@ def bits2sine(tx_bits,fc,fs,complex_out = True):
 				# Get complex variable from specified bit
 				cplx_bit = KEY_16QAM[tx_bits[i]]
 
-				# Convert complex variable to sinusoid
-				amp = abs(cplx_bit)
-				pha = np.arctan2(cplx_bit.imag,cplx_bit.real)
-
 				# Use for loop to generate sinusoid
 				for k in range(N):
-					tx[k + N*i] = (2**14)*amp*(np.sin(2*np.pi*fc*k/fs + pha) + 1j*np.cos(2*np.pi*fc*k/fs + pha))
+					tx[k + N*i] = (2**4)*(np.real(cplx_bit)*np.sin(2*np.pi*fc*k/fs) + 1j*np.imag(cplx_bit)*np.cos(2*np.pi*fc*k/fs))
 		else:
 			for i in range(len(tx_bits)):
 				# Get complex variable from specified bit
@@ -88,7 +84,7 @@ def bits2sine(tx_bits,fc,fs,complex_out = True):
 
 				# Use for loop to generate sinusoid
 				for k in range(N):
-					tx[k + N*i] = amp*np.sin(2*np.pi*fc*k/fs + pha)
+					tx[k + N*i] = (2**4)*amp*np.sin(2*np.pi*fc*k/fs + pha)
 
 		return tx
 

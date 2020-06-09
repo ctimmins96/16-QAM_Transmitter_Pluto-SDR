@@ -80,3 +80,6 @@ if __name__ == '__main__':
 
 	log_file_write(rx_buf1,rx_buf2)
 
+	# Release SDR
+	sdr.release()
+
