@@ -13,7 +13,7 @@ Methods:
 - bits2sine
 """
 ### Import Statements
-import adi
+#import adi
 import numpy as np
 import sys
 import traceback

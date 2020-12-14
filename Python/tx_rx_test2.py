@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 		k += 1
 
-	mat_file_write(rx_buf1,"C:\\Users\\chase\\Desktop\\")
+	mat_file_write(rx_buf1,"")
 
 	# Release SDR
-	sdr.release()
+	
